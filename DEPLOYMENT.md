@@ -43,7 +43,7 @@ Push `Stunet-frontend` and `Stunet-backend` as separate GitHub repos.
 | Setting | Value |
 |---------|-------|
 | **Name** | `Stunet-backend` |
-| **Root Directory** | `Stunet-backend` (if monorepo) |
+| **Root Directory** | `stunet-backend` (if monorepo) |
 | **Runtime** | `Node` |
 | **Build Command** | `npm install && npx prisma generate && npm run build` |
 | **Start Command** | `node dist/index.js` |

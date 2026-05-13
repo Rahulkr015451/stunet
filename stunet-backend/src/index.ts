@@ -29,6 +29,9 @@ import chatRoutes from "./routes/chat";
 
 const app = express();
 
+// Trust Render's load balancer
+app.set('trust proxy', 1);
+
 // Security Headers
 app.use(helmet());
 
