@@ -48,7 +48,11 @@ app.use("/auth", limiter);
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: [
+      'https://www.stunet.in',
+      'https://stunet-blush.vercel.app'
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
 );
