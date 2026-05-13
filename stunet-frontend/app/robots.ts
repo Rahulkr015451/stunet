@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_CLIENT_URL || "https://stunet.vercel.app";
+  const baseUrl = process.env.NEXT_PUBLIC_CLIENT_URL || "https://www.stunet.in";
 
   return {
     rules: {
