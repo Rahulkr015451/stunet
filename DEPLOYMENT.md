@@ -74,7 +74,7 @@ Push `Stunet-frontend` and `Stunet-backend` as separate GitHub repos.
 | Setting | Value |
 |---------|-------|
 | **Framework Preset** | `Next.js` (auto-detected) |
-| **Root Directory** | `Stunet-frontend` (if monorepo) |
+| **Root Directory** | `stunet-frontend` (if monorepo) |
 | **Build Command** | `npm run build` (default) |
 | **Output Directory** | Leave default |
 
