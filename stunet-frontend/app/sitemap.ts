@@ -1,8 +1,8 @@
 import { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = process.env.NEXT_PUBLIC_CLIENT_URL || "https://stunet.vercel.app";
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+  const baseUrl = process.env.NEXT_PUBLIC_CLIENT_URL || "https://stunet.in";
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://stunet-knng.onrender.com";
 
   // Base routes
   const routes: MetadataRoute.Sitemap = [
