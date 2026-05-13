@@ -1,0 +1,202 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  googleId  String?  @unique
+  email     String   @unique
+  password         String?
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  name             String?
+  image            String?
+  role             Role     @default(student)
+  createdAt        DateTime @default(now())
+
+  profile      StudentProfile?
+  skills       UserSkill[]
+  customSkills CustomSkill[]
+  projects     Project[]
+  jobs         Job[]
+
+  studentApplications  Application[] @relation("StudentApplications")
+  employerApplications Application[] @relation("EmployerApplications")
+
+  followers  Follow[] @relation("Following")
+  following  Follow[] @relation("Followers")
+
+  conversationsA  Conversation[] @relation("ConversationsA")
+  conversationsB  Conversation[] @relation("ConversationsB")
+  sentMessages    Message[]      @relation("SentMessages")
+}
+
+model StudentProfile {
+  id             String @id @default(uuid())
+  userId         String @unique
+  college        String
+  degree         String
+  graduationYear String
+  bio            String
+
+  resumeUrl   String?
+  linkedInUrl String?
+  location    String?
+
+  user User @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Skill {
+  id    String      @id @default(uuid())
+  name  String      @unique
+  users UserSkill[]
+}
+
+model UserSkill {
+  id      String     @id @default(uuid())
+  userId  String
+  skillId String
+  level   SkillLevel
+
+  user  User  @relation(fields: [userId], references: [id])
+  skill Skill @relation(fields: [skillId], references: [id])
+
+  @@unique([userId, skillId])
+}
+
+model CustomSkill {
+  id     String     @id @default(uuid())
+  userId String
+  name   String
+  level  SkillLevel
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, name])
+}
+
+model Project {
+  id     String @id @default(uuid())
+  userId String
+
+  title       String
+  description String
+  techStack   String
+
+  githubUrl String?
+  liveUrl   String?
+
+  isPublic Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Job {
+  id         String @id @default(uuid())
+  employerId String
+
+  title       String
+  company     String
+  location    String
+  description String
+  type        String // Job | Internship
+  status      String @default("PENDING") // PENDING | APPROVED
+
+  createdAt DateTime @default(now())
+
+  employer User @relation(fields: [employerId], references: [id])
+
+  applications Application[]
+}
+
+model Application {
+  id         String   @id @default(uuid())
+  jobId      String
+  studentId  String
+  employerId String
+  status     String   @default("APPLIED")
+  resumeUrl  String?
+  createdAt  DateTime @default(now())
+
+  job Job @relation(fields: [jobId], references: [id])
+
+  student  User @relation("StudentApplications", fields: [studentId], references: [id])
+  employer User @relation("EmployerApplications", fields: [employerId], references: [id])
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  link        String
+  createdAt   DateTime @default(now())
+}
+
+enum Role {
+  student
+  employer
+  admin
+}
+
+enum SkillLevel {
+  beginner
+  intermediate
+  advanced
+}
+
+model Follow {
+  id          String   @id @default(uuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower  User @relation("Followers", fields: [followerId], references: [id])
+  following User @relation("Following", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+  userAId   String
+  userBId   String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  userA    User      @relation("ConversationsA", fields: [userAId], references: [id])
+  userB    User      @relation("ConversationsB", fields: [userBId], references: [id])
+  messages Message[]
+
+  @@unique([userAId, userBId])
+  @@index([userAId])
+  @@index([userBId])
+}
+
+model Message {
+  id             String   @id @default(uuid())
+  conversationId String
+  senderId       String
+  text           String
+  createdAt      DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+  sender       User         @relation("SentMessages", fields: [senderId], references: [id])
+
+  @@index([conversationId])
+}
+
